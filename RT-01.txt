@@ -1,0 +1,44 @@
+enable
+configure terminal
+hostname RT-01
+banner motd " SOMENTE PESSOAS AUTORIZADAS!"
+enable secret SenhaEnable
+service password-encryption
+ip domain-name Rede1.Local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+login block-for 180 attempts 3 within 60
+security passwords min-length 8
+line console 0
+password SenhadaConsole
+login
+exit
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+interface gigabitEthernet 0/1
+ip address 192.168.0.1 255.255.224.0
+no shutdown
+description REDE 192.168.0.1
+exit
+interface serial 0/0/0
+ip address 201.187.89.1 255.255.255.252
+no shutdown
+description REDE 201.187.89.1 
+exit
+interface serial 0/0/1
+ip address 201.187.89.5 255.255.255.252
+no shutdown
+description REDE 200.200.200.1 
+exit
+interface serial 0/1/1
+ip address 201.187.89.21 255.255.255.252
+no shutdown
+description REDE 201.187.89.20
+do wr
+do wr
+
+
