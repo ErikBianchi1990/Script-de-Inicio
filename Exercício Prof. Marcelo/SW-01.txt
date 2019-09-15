@@ -17,9 +17,6 @@ transport input ssh
 login local
 exec-timeout 5
 exit
-vlan 88
-name GESTAO
-exit
 vlan 10
 name TESTES
 exit
