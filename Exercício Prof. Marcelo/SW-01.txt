@@ -1,0 +1,63 @@
+enable
+configure terminal
+hostname SW-01
+banner motd "SOMENTE PESSOAL AUTORIZADO"
+enable secret SenhadaEnable
+service password-encryption
+ip domain-name Rede1.Local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line console 0
+password SenhadaConsole
+login
+exit
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+vlan 88
+name GESTAO
+exit
+vlan 10
+name TESTES
+exit
+vlan 20
+name TELEMARKETING
+exit
+vlan 30
+name CONSULTORES
+exit
+vlan 40
+name RH
+exit
+interface gigabitEthernet 0/1
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 10,20,30,40,88
+no shutdown
+exit
+interface vlan 88
+ip address 192.168.31.254 255.255.224.0
+description INTERFACE DE GERENCIAMENTO REDE 1
+exit
+ip default-gateway 192.168.0.1
+exit
+interface range fastEthernet 0/1,fastEthernet 0/2,fastEthernet 0/3,fastEthernet 0/4,fastEthernet 0/5,fastEthernet 0/6,fastEthernet 0/7,fastEthernet 0/8,fastEthernet 0/9
+switchport mode access
+switchport access vlan 10
+exit
+interface range fastEthernet 0/10,fastEthernet 0/11,fastEthernet 0/12,fastEthernet 0/13,fastEthernet 0/14,fastEthernet 0/15,fastEthernet 0/16,fastEthernet 0/17
+switchport mode access
+switchport access vlan 20
+exit
+interface range fastEthernet 0/18,fastEthernet 0/22,fastEthernet 0/24
+switchport mode access
+switchport access vlan 30
+exit
+interface range fastEthernet 0/19,fastEthernet 0/20,fastEthernet 0/21,fastEthernet 0/23
+switchport mode access
+switchport access vlan 40
+exit
+do wr

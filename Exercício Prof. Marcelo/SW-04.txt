@@ -1,0 +1,55 @@
+enable
+configure terminal
+hostname SW-04
+banner motd "SOMENTE PESSOAL AUTORIZADO"
+enable secret SenhadaEnable
+service password-encryption
+ip domain-name Rede4.Local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line console 0
+password SenhadaConsole
+login
+exit
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+vlan 88
+name SERVIDORES/MONITORAMENTO
+exit
+vlan 200
+name VOZ
+exit
+vlan 90
+name TACACSo	
+exit
+interface gigabitEthernet 0/1
+switchport mode trunk
+switchport trunk native vlan 88
+no shutdown
+exit
+interface vlan 88
+ip address 172.31.255.254 255.240.0.0
+description INTERFACE DE GERENCIAMENTO REDE 4
+exit
+ip default-gateway 172.16.0.1
+interface range fastEthernet 0/1,fastEthernet 0/2,fastEthernet 0/3,fastEthernet 0/4,fastEthernet 0/5,fastEthernet 0/6,fastEthernet 0/7,fastEthernet 0/8,fastEthernet 0/9
+switchport mode access
+switchport access vlan 88
+exit
+interface range fastEthernet 0/10,fastEthernet 0/11,fastEthernet 0/12
+switchport mode access
+switchport access vlan 200
+exit
+interface range fastEthernet 0/13,fastEthernet 0/14
+switchport mode access
+switchport access vlan 90
+exit
+interface range fastEthernet 0/15,fastEthernet 0/16,fastEthernet 0/17,fastEthernet 0/18,fastEthernet 0/19,fastEthernet 0/20,fastEthernet 0/21,fastEthernet 0/22,fastEthernet 0/23,fastEthernet 0/24
+switchport mode access
+switchport access vlan 88
+exit
+do wr
