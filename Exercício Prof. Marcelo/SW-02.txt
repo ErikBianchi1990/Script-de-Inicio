@@ -1,0 +1,59 @@
+enable
+configure terminal
+hostname SW-02
+banner motd "SOMENTE PESSOAL AUTORIZADO"
+enable secret SenhadaEnable
+service password-encryption
+ip domain-name Rede2.Local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line console 0
+password SenhadaConsole
+login
+exit
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+vlan 50
+name ANALISTAS
+exit
+vlan 60
+name OPERACAO
+exit
+vlan 70
+name TI
+exit
+vlan 80
+name ADMINISTRATIVO
+exit
+interface gigabitEthernet 0/1
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 50,60,70,80,88
+no shutdown
+exit
+interface vlan 88
+ip address 10.255.255.254 255.0.0.0
+description INTERFACE DE GERENCIAMENTO REDE 1
+exit
+ip default-gateway 10.0.0.1
+interface range fastEthernet 0/1,fastEthernet 0/2,fastEthernet 0/3,fastEthernet 0/4,fastEthernet 0/5,fastEthernet 0/6,fastEthernet 0/7,fastEthernet 0/8,fastEthernet 0/9,fastEthernet 0/10,fastEthernet 0/11,fastEthernet 0/12,fastEthernet 0/13,fastEthernet 0/14,fastEthernet 0/15,fastEthernet 0/16,fastEthernet 0/17,fastEthernet 0/18,fastEthernet 0/19,fastEthernet 0/20
+switchport mode access
+switchport access vlan 50
+exit
+interface fastEthernet 0/24
+switchport mode access
+switchport access vlan 60
+exit
+interface range fastEthernet 0/21,fastEthernet 0/23
+switchport mode access
+switchport access vlan 70
+exit
+interface fastEthernet 0/22
+switchport mode access
+switchport access vlan 80
+exit
+do wr
